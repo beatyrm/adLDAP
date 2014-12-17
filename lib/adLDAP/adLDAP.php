@@ -732,7 +732,17 @@ class adLDAP {
 
         // Perform the search and grab all their details
         //$filter = "(|(cn=" . $search . ")(displayname=" . $search . ")(samaccountname=" . $search . "))";
-        $filter = "(&(!(objectClass=computer))(|(anr=" . $search . ")))";
+        //$filter = "(&(!(objectClass=computer))(|(anr=" . $search . ")))";
+        if (preg_match('/\s+/', $search) && !strstr($search, ',')) {
+            // there is whitespace in the string we'll assume a full name
+            $values = preg_split('/\s+/', $search, 2);
+            $searchMod = $values[1] . ', ' . $values[0];
+            // search cn and samaccountname for provided value
+            $filter="(|(samaccountname=$search*)(displayname=$searchMod*)(givenname=$search))";
+        } else {
+            // search cn and samaccountname for provided value
+            $filter="(|(samaccountname=$search*)(displayname=$search*)(givenname=$search))";
+        } 
         $fields = array("samaccountname","dn","mail","sn","givenname","displayname","memberof");
         $sr = ldap_search($this->getLdapConnection(), $this->getBaseDn(), $filter, $fields);
         $entries = ldap_get_entries($this->getLdapConnection(), $sr);
@@ -746,7 +756,7 @@ class adLDAP {
                 $objectArray[$entries[$i]["samaccountname"][0]] = array($entries[$i]["cn"][0],$entries[$i]["displayname"][0],$entries[$i]["displayname"][0],$entries[$i]["distinguishedname"][0]);
             } else {
                 if (isset($entries[$i]["samaccountname"])) {                                                                                                                                                                
-                    array_push($objectArray, $entries[$i]["samaccountname"][0]);
+                    array_push($objectArray, $entries[$i]);
                 }
             }
         }
