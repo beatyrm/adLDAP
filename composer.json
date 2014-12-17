@@ -1,5 +1,5 @@
 {
-	"name": "adldap/adldap",
+	"name": "beatyrm/adldap",
 	"type": "library",
 	"description": "adLDAP, PHP LDAP library for manipulating Active Directory",
 	"keywords": [
@@ -10,8 +10,8 @@
 	"homepage": "http://adldap.sourceforge.net",
 	"license": "LGPL-2.1",
 	"support": {
-		"issues": "https://github.com/adldap/adLDAP/issues",
-		"source": "https://github.com/adldap/adLDAP"
+		"issues": "https://github.com/beatyrm/adLDAP/issues",
+		"source": "https://github.com/beatyrm/adLDAP"
 	},
 	"authors": [
 		{
