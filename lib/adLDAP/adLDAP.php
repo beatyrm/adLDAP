@@ -733,7 +733,7 @@ class adLDAP {
         // Perform the search and grab all their details
         //$filter = "(|(cn=" . $search . ")(displayname=" . $search . ")(samaccountname=" . $search . "))";
         $filter = "(&(!(objectClass=computer))(|(anr=" . $search . ")))";
-        $fields = array("cn","description","displayname","distinguishedname","samaccountname");
+        $fields = array("samaccountname","dn","mail","sn","givenname","displayname","memberof");
         $sr = ldap_search($this->getLdapConnection(), $this->getBaseDn(), $filter, $fields);
         $entries = ldap_get_entries($this->getLdapConnection(), $sr);
 
@@ -745,7 +745,9 @@ class adLDAP {
                 // description is set to displayname if no description is present
                 $objectArray[$entries[$i]["samaccountname"][0]] = array($entries[$i]["cn"][0],$entries[$i]["displayname"][0],$entries[$i]["displayname"][0],$entries[$i]["distinguishedname"][0]);
             } else {
-                array_push($objectArray, $entries[$i]["samaccountname"][0]);
+                if (isset($entries[$i]["samaccountname"])) {                                                                                                                                                                
+                    array_push($objectArray, $entries[$i]["samaccountname"][0]);
+                }
             }
         }
         if ($sorted) {
